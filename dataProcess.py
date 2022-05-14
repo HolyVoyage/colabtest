@@ -1,7 +1,7 @@
 import numpy as np 
 import os
 import random
-import gdal
+# import gdal
 import cv2
 
 #  获取颜色字典
@@ -46,10 +46,11 @@ def color_dict(labelFolder, classNum):
 #  读取图像像素矩阵
 #  fileName 图像文件名
 def readTif(fileName):
-    dataset = gdal.Open(fileName)
-    width = dataset.RasterXSize
-    height = dataset.RasterYSize
-    GdalImg_data = dataset.ReadAsArray(0, 0, width, height)
+    # dataset = gdal.Open(fileName)
+    # width = dataset.RasterXSize
+    # height = dataset.RasterYSize
+    # GdalImg_data = dataset.ReadAsArray(0, 0, width, height)
+    GdalImg_data = cv2.imread(fileName)
     return GdalImg_data
 
 #  数据预处理：图像归一化+标签onehot编码
@@ -80,10 +81,10 @@ def dataPreprocess(img, label, classNum, colorDict_GRAY):
 def trainGenerator(batch_size, train_image_path, train_label_path, classNum, colorDict_GRAY, resize_shape = None):
     imageList = os.listdir(train_image_path)
     labelList = os.listdir(train_label_path)
-    img = readTif(train_image_path + "\\" + imageList[0])
+    img = readTif(train_image_path + "/" + imageList[0])
     #  GDAL读数据是(BandNum,Width,Height)要转换为->(Width,Height,BandNum)
     img = img.swapaxes(1, 0)
-    img = img.swapaxes(1, 2)
+    # img = img.swapaxes(1, 2)
     #  无限生成数据
     while(True):
         img_generator = np.zeros((batch_size, img.shape[0], img.shape[1], img.shape[2]), np.uint8)
@@ -94,9 +95,9 @@ def trainGenerator(batch_size, train_image_path, train_label_path, classNum, col
         #  随机生成一个batch的起点
         rand = random.randint(0, len(imageList) - batch_size)
         for j in range(batch_size):
-            img = readTif(train_image_path + "\\" + imageList[rand + j])
+            img = readTif(train_image_path + "/" + imageList[rand + j])
             img = img.swapaxes(1, 0)
-            img = img.swapaxes(1, 2)
+            # img = img.swapaxes(1, 2)
             #  改变图像尺寸至特定尺寸(
             #  因为resize用的不多，我就用了OpenCV实现的，这个不支持多波段，需要的话可以用np进行resize
             if(resize_shape != None):
@@ -104,11 +105,11 @@ def trainGenerator(batch_size, train_image_path, train_label_path, classNum, col
             
             img_generator[j] = img
             
-            label = readTif(train_label_path + "\\" + labelList[rand + j]).astype(np.uint8)
+            label = readTif(train_label_path + "/" + labelList[rand + j]).astype(np.uint8)
             #  若为彩色，转为灰度
             if(len(label.shape) == 3):
                 label = label.swapaxes(1, 0)
-                label = label.swapaxes(1, 2)
+                # label = label.swapaxes(1, 2)
                 label = cv2.cvtColor(label, cv2.COLOR_RGB2GRAY)
             if(resize_shape != None):
                 label = cv2.resize(label, (resize_shape[0], resize_shape[1]))
@@ -122,9 +123,9 @@ def trainGenerator(batch_size, train_image_path, train_label_path, classNum, col
 def testGenerator(test_iamge_path, resize_shape = None):
     imageList = os.listdir(test_iamge_path)
     for i in range(len(imageList)):
-        img = readTif(test_iamge_path + "\\" + imageList[i])
+        img = readTif(test_iamge_path + "/" + imageList[i])
         img = img.swapaxes(1, 0)
-        img = img.swapaxes(1, 2)
+        # img = img.swapaxes(1, 2)
         #  归一化
         img = img / 255.0
         if(resize_shape != None):
@@ -147,4 +148,4 @@ def saveResult(test_image_path, test_predict_path, model_predict, color_dict, ou
         #  修改差值方式为最邻近差值
         img_out = cv2.resize(img_out, (output_size[0], output_size[1]), interpolation = cv2.INTER_NEAREST)
         #  保存为无损压缩png
-        cv2.imwrite(test_predict_path + "\\" + imageList[i][:-4] + ".png", img_out)
+        cv2.imwrite(test_predict_path + "/" + imageList[i][:-4] + ".png", img_out)

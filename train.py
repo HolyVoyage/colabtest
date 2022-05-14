@@ -11,23 +11,35 @@ import xlwt
 import os
 
 
+# '''
+# 数据集相关参数
+# '''
+# #  训练数据图像路径
+# train_image_path = "/content/colabtest/data/1024_255_png/JPEGImages"
+# #  训练数据标签路径
+# train_label_path = "/content/colabtest/data/1024_255_png/SegmentationClass"
+# #  验证数据图像路径
+# validation_image_path = "/content/colabtest/data/1024_255_test_png/img"
+# #  验证数据标签路径
+# validation_label_path = "/content/colabtest/data/1024_255_test_png/lab"
+
 '''
 数据集相关参数
 '''
 #  训练数据图像路径
-train_image_path = "Data\\train\\image"
+train_image_path = "/content/colabtest/data/512_255_png/JPEGImages"
 #  训练数据标签路径
-train_label_path = "Data\\train\\label"
+train_label_path = "/content/colabtest/data/512_255_png/SegmentationClass"
 #  验证数据图像路径
-validation_image_path = "Data\\validation\\image"
+validation_image_path = "/content/colabtest/data/512_255_png_test/img"
 #  验证数据标签路径
-validation_label_path = "Data\\validation\\label"
+validation_label_path = "/content/colabtest/data/512_255_png_test/lab"
 
 '''
 模型相关参数
 '''
 #  批大小
-batch_size = 2
+batch_size = 12
 #  类的数目(包括背景)
 classNum = 2
 #  模型输入图像大小
@@ -39,7 +51,7 @@ learning_rate = 1e-4
 #  预训练模型地址
 premodel_path = None
 #  训练模型保存地址
-model_path = "Model\\unet_model.hdf5"
+model_path = "/content/colabtest/log1/unet_model.hdf5"
 
 #  训练数据数目
 train_num = len(os.listdir(train_image_path))
