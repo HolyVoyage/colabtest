@@ -1,4 +1,4 @@
-from Model.seg_hrnet import seg_hrnet
+import seg_unet
 from dataProcess import testGenerator, saveResult, color_dict
 import os
 
@@ -21,7 +21,7 @@ train_label_path = "Data\\train\\label"
 #  标签的颜色字典
 colorDict_RGB, colorDict_GRAY = color_dict(train_label_path, classNum)
 
-model = seg_hrnet(model_path)
+model = seg_unet(model_path)
 
 testGene = testGenerator(test_iamge_path, input_size)
 

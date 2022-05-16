@@ -39,7 +39,7 @@ validation_label_path = "/content/colabtest/data/512_255_png_test/lab"
 模型相关参数
 '''
 #  批大小
-batch_size = 12
+batch_size = 4
 #  类的数目(包括背景)
 classNum = 2
 #  模型输入图像大小
@@ -51,7 +51,7 @@ learning_rate = 1e-4
 #  预训练模型地址
 premodel_path = None
 #  训练模型保存地址
-model_path = "/content/colabtest/log1/unet_model.hdf5"
+model_path = "/content/colabtest/logs/unet_model.hdf5"
 
 #  训练数据数目
 train_num = len(os.listdir(train_image_path))
